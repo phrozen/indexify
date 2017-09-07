@@ -7,6 +7,7 @@ import (
 	"os"
 )
 
+// Directory type for recursive/template purposes
 type Directory struct {
 	Name string
 	Path string

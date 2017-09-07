@@ -47,6 +47,4 @@ func DetectType(filename string) string {
 	default:
 		return "file"
 	}
-
-	return "file"
 }
