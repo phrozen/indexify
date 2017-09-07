@@ -9,9 +9,13 @@ import (
 
 // Directory type for recursive/template purposes
 type Directory struct {
-	Name string
 	Path string
 	List []os.FileInfo
+}
+
+// NewDirectory returns a new isntance of a directory type
+func NewDirectory(path string) *Directory {
+	return &Directory{Path: path}
 }
 
 func main() {
@@ -19,14 +23,19 @@ func main() {
 	funcMap := template.FuncMap{
 		"formatSize": FormatBytes,
 		"type":       DetectType,
+		"title":      NameFromPath,
 	}
 
-	dir := Directory{Name: "", Path: "."}
-	list, err := ioutil.ReadDir(dir.Path)
+	path, err := os.Getwd()
 	if err != nil {
 		panic(err)
 	}
-	dir.List = list
+
+	dir := NewDirectory(path)
+	dir.List, err = ioutil.ReadDir(dir.Path)
+	if err != nil {
+		panic(err)
+	}
 
 	f, err := os.Create(fmt.Sprintf("%s/index.html", dir.Path))
 	if err != nil {
