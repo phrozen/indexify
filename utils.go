@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"strings"
 )
 
@@ -13,19 +14,19 @@ func FormatBytes(n int64) string {
 	}
 
 	f := float64(n)
-	if (f / 1e3) < 1000 {
-		return fmt.Sprintf("%.2F KB", f/1e3)
+	if (f / 1024) < 1000 {
+		return fmt.Sprintf("%.2F KB", f/1024)
 	}
 
-	if (f / 1e6) < 1000 {
-		return fmt.Sprintf("%.2F MB", f/1e6)
+	if (f / (1024 * 1024)) < 1000 {
+		return fmt.Sprintf("%.2F MB", f/(1024*1024))
 	}
 
-	if (f / 1e9) < 1000 {
-		return fmt.Sprintf("%.2F GB", f/1e9)
+	if (f / (1024 * 1024 * 1024)) < 1000 {
+		return fmt.Sprintf("%.2F GB", f/(1024*1024*1024))
 	}
 
-	return fmt.Sprintf("%.2F TB", f/1e12)
+	return fmt.Sprintf("%.2F TB", f/(1024*1024*1024*1024))
 }
 
 // DetectType checks file extension to check for
@@ -47,4 +48,13 @@ func DetectType(filename string) string {
 	default:
 		return "file"
 	}
+}
+
+// NameFromPath extracts the name of the current Folder
+func NameFromPath(path string) string {
+	name, err := os.Stat(path)
+	if err != nil {
+		panic(err)
+	}
+	return name.Name()
 }
