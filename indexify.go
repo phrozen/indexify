@@ -7,50 +7,36 @@ import (
 	"os"
 )
 
-const tmpl = `
-<!DOCTYPE html>
-<html>
-	<head>
-	</head>
-	<body>
-		<table>
-			<tr>
-				<th>Size</th>
-				<th>Name</th>
-				<th>Last Modified</th>
-			</tr>
-			{{range .}}
-				<tr>
-					{{if .IsDir}}
-						<td>[dir]</td>
-					{{else}}
-						<td>{{.Size}}</td>
-					{{end}}
-					<td>
-						<a href="./{{.Name}}">{{.Name}}</a>
-					</td>
-					<td>{{.ModTime}}</td>
-				</tr>
-			{{end}}
-		</table>
-	</body>
-</html>
-`
-const dir = "."
+type Directory struct {
+	Name string
+	Path string
+	List []os.FileInfo
+}
 
 func main() {
-	list, err := ioutil.ReadDir(dir)
+
+	funcMap := template.FuncMap{
+		"formatSize": FormatBytes,
+		"type":       DetectType,
+	}
+
+	dir := Directory{Name: "", Path: "."}
+	list, err := ioutil.ReadDir(dir.Path)
 	if err != nil {
 		panic(err)
 	}
-	f, err := os.Create(fmt.Sprintf("%s/index.html", dir))
+	dir.List = list
+
+	f, err := os.Create(fmt.Sprintf("%s/index.html", dir.Path))
 	if err != nil {
 		panic(err)
 	}
 	defer f.Close()
-	t := template.Must(template.New("index").Parse(tmpl))
-	err = t.Execute(f, list)
+
+	t := template.Must(template.New("index").Funcs(funcMap).Parse(tmpl))
+	err = t.Execute(f, dir)
 	if err != nil {
 		panic(err)
 	}
+
 }
