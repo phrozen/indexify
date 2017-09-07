@@ -4,13 +4,14 @@ const tmpl = `
 <!DOCTYPE html>
 <html>
 <head>
-	<title>{{.Name}}</title>
+	<title>{{.Path | title}}</title>
 	<style>
 		html, body {
 			width: 100%;
 			margin: 10px;
-			font-family: Arial, Helvetica, sans-serif;
-			font-size: 1.05em;
+			font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+			line-height: 1.05em;
+			color: #333;
 		}
 		.left {
 			text-align: left;
@@ -21,12 +22,19 @@ const tmpl = `
 		.center {
 			text-align: center;
 		}
-		td, th {
+		tbody > tr> td, th {
 			padding: 5px 10px;
 			line-height: 22px;
 		}
 		table tbody tr:nth-child(even) {
 			background-color: #eee;
+		}
+		a {
+			text-decoration: none;
+			color: #339;
+		}
+		a:hover {
+			text-decoration: underline;
 		}
 		/*
 			Icons obtained from IcoMoon Free Pack -	https://icomoon.io
@@ -37,7 +45,8 @@ const tmpl = `
 			width: 16px;
 			height: 16px;
 			background-position: center center;
-			background-repeat: no-repeat; 
+			background-repeat: no-repeat;
+			background-size: cover;
 		}
 		i.folder {
 			background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAPElEQVQ4T2NkoBAwUqifAWTAfzyGLGBgYEjEZwkhA0B68RpCjAF4fTlqAAPBaCSYTEYDkUqBSDCk8SkAANzTDwbegmyWAAAAAElFTkSuQmCC');
@@ -61,19 +70,21 @@ const tmpl = `
 		i.compressed {
 			background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAs0lEQVQ4T6WTURHCMBBEXxVQJKAAqgQs4AApSEBCcYAEcIAEUACzkGOOThJyQ3+apNvXvb1ex/sagXVal25XYAucvKBLmwfg1zq2vemluQM74GCHOYB/wYMEmCcHe4NEHUjfAypnI1jEwQ2YufoFWUQcTMN95RZx0AwQOdeFZkCpC82Avx0YQF88A0Ph1yyG6AG1LKqAWnd8Rtk2yvYyqS7AKlrCj6H8PP4qoWWcp+Cj5uEJd4U4EStFKFYAAAAASUVORK5CYII=');
 		}
+		i.github {
+			background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABJ0lEQVQ4T62TjU0CQRCFPyrQDsAK1AqUCrQDpQOpQK0A7AArUCtQKpAOgA6wAs1nZi6TFS8xcZJL5nZ23nvzswN+2iFwAVwC+toOeAZewu+yBk3+NTAriS28QFNgkYEK4OHVHkX7jrw7MZAAN8G8DakqOWgyP4LZ0oahZC7ACHgP2ffAXfgnwFuAnAOrqN/4bfhHAuSBdx8B2fusljoVQJazyDgNpj4AlalYWwrwWW63U/kNqMv5F4BNdFW2v5awVUFtiv0Y9zTAzXwCnMp30wXw5xV4CN/5z2NtVac5apfMCemnjbNpMh8Hu4q8ZLcrwLpRtpQwAZTmonjJFc3EmlOn5cZKsKtjE8QXlzvRjjQBZHadfVjdW6hM1umXjcqYZVpe9xINfAG+CUAPVSD+aQAAAABJRU5ErkJggg==');
+		}
 	</style>
 
 </head>
 <body>
-	<h1>{{.Name}}</h1>
-
-	<table>
+	<h1>{{.Path | title}}</h1>
+	<table id="list">
 		<tbody>
 			<tr>
 				<th class="center"></th>
-				<th class="left">Name</th>
-				<th class="center">Size</th>
-				<th class="right">Last Modified</th>
+				<th class="left"><a href="#">Name</a></th>
+				<th class="center"><a href="#">Size</a></th>
+				<th class="right"><a href="#">Last Modified</a></th>
 			</tr>
 			{{range .List}}
 				<tr>
@@ -90,6 +101,14 @@ const tmpl = `
 				</tr>
 			{{end}}
 		</tbody>
+		<tfoot>
+			<tr><td colspan="4" class="right">
+				<span style="font-size: 10px;">Created with
+				<a href="https://github.com/phrozen/indexify" target="_blank">indexify.</a>
+				<i style="display: inline-block; width: 10px; height: 10px; margin: -1px;" class="github"></i>
+				</span>
+			</td></tr>
+		</tfoot>
 	</table>
 </body>
 </html>
