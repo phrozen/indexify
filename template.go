@@ -28,6 +28,10 @@ const tmpl = `
 		table tbody tr:nth-child(even) {
 			background-color: #eee;
 		}
+		/*
+			Icons obtained from IcoMoon Free Pack -	https://icomoon.io
+			CC BY 4.0 - https://creativecommons.org/licenses/by/4.0/
+		*/
 		i {
 			display: block;
 			width: 16px;
